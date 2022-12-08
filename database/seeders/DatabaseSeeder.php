@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Models\Post;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Storage;
 
 
 class DatabaseSeeder extends Seeder
@@ -17,7 +18,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\Post::factory(100)->create();
+        Storage::deleteDirectory('public/posts');
+        Storage::makeDirectory('public/posts');//Para crear la carpeta de posts en public
+
+        \App\Models\Post::factory(20)->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',

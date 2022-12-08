@@ -2,7 +2,7 @@
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
+            {{ __('LIVEWIRE') }}
         </h2>
     </x-slot>
 
@@ -17,8 +17,9 @@
 
         {{-- {{$search}} --}}
         <x-table>
-            <div class="px-6 py-4">
-                <x-jet-input class="w-full" placeholder="¿Qué buscas?" type="text" wire:model="search" />
+            <div class="px-6 py-4 flex items-center">
+                <x-jet-input class="flex-1 mr-4" placeholder="¿Qué buscas?" type="text" wire:model="search" />
+                @livewire('create-post')
             </div>
 
             @if ($posts->count())

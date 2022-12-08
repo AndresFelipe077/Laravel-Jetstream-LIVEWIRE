@@ -26,6 +26,10 @@ class ShowPosts extends Component
     public $sort      = 'id';
     public $direction = 'desc';
 
+    // protected $listeners = ['render' => 'render']; es lo mismo que abajo solo que cuando ambos se llaman igual
+    protected $listeners = ['render'];
+
+
     public function render()
     {
 
