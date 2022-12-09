@@ -10,11 +10,11 @@ class CreatePost extends Component
 {
     use WithFileUploads;
 
-    public $open = true;
+    public $open = false;
 
     public $title, $content, $image, $identificador;
 
-    public function mount()//funcion para resetear el input del file ya que como es inmutable no se cambia
+    public function mount() //funcion para resetear el input del file ya que como es inmutable no se cambia
     {
         $this->identificador = rand();
     }
@@ -24,7 +24,7 @@ class CreatePost extends Component
         // 'content' => 'required|min:100'
         'title'   => 'required',
         'content' => 'required',
-        'image'   => 'required|image|max:2048' 
+        'image'   => 'required|image|max:2048'
     ];
 
     // Funcion para mostrar un mensaje cuando no se cumpla los $rules
@@ -50,7 +50,7 @@ class CreatePost extends Component
 
         $this->identificador = rand();
 
-        $this->emit('show-posts','render');
+        $this->emitTo('show-posts', 'render');
         $this->emit('alert', 'Se creo correctamente el contenido');
     }
 

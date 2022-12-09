@@ -17,8 +17,8 @@
                 <span class="block sm:inline"></span>
             </div> --}}
 
-            <div wire:loading wire:target="image" class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md"
-                role="alert">
+            <div wire:loading wire:target="image"
+                class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md" role="alert">
                 <div class="flex">
                     <div class="py-1"><svg class="fill-current h-6 w-6 text-teal-500 mr-4"
                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -71,7 +71,8 @@
 
 
             <div>
-                <input type="file" wire:model="image" id="{{$identificador}}">
+                <input type="file" wire:model="image" id="{{ $identificador }}">
+                <x-jet-input-error for="image" />
             </div>
 
         </x-slot>
