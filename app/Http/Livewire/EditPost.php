@@ -16,7 +16,7 @@ class EditPost extends Component
     public $open = false;
     public $post, $image, $identificador;
 
-    protected $rules = [
+    protected $rules = [//Sincronizar datos para la vista edit-post
         'post.title'   => 'required',
         'post.content' => 'required',
     ];
@@ -27,6 +27,8 @@ class EditPost extends Component
         $this->post = $post;
 
         $this->identificador = rand();
+
+        
     }
 
     public function save()

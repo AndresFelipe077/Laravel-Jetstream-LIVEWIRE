@@ -4,6 +4,9 @@ namespace App\Http\Livewire;
 
 use App\Models\Post;
 use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\WithPagination;
+use Illuminate\Support\Facades\Storage;
 
 
 class ShowPosts extends Component
@@ -22,13 +25,34 @@ class ShowPosts extends Component
     //     $this->name = $name;
     // }
 
-    public $search;
+    use WithFileUploads;//Para las imagenes
+    use WithPagination;//Para las paginaciones
+
+
+    public $search, $post, $image, $identificador;
     public $sort      = 'id';
     public $direction = 'desc';
+
+    public $open_edit = false;
+
+    public function mount()
+    {
+        $this->identificador = rand();
+        $this->post = new Post();
+    }
+
+    protected $rules = [
+        'post.title'   => 'required',
+        'post.content' => 'required',
+    ];
 
     // protected $listeners = ['render' => 'render']; es lo mismo que abajo solo que cuando ambos se llaman igual
     protected $listeners = ['render'];
 
+    public function updatingSearch()//Funcion para qeu cambie entradas al input search es decir para resetear(algo asi)
+    { 
+        $this->resetPage();//Esto hace que elimine la paginacion y regrese a su estado inicial y asi pueda buscar libremente en todos los datos
+    }
 
     public function render()
     {
@@ -36,7 +60,7 @@ class ShowPosts extends Component
         $posts = Post::where('title','like','%' . $this->search . '%')
                      ->orWhere('content', 'like' , '%' . $this->search . '%')
                      ->orderBy($this->sort, $this->direction)
-                     ->get();
+                     ->paginate(10);
 
         return view('livewire.show-posts', compact('posts'));
         // return view('livewire.show-posts')
@@ -65,5 +89,31 @@ class ShowPosts extends Component
         
     }
 
+    public function edit(Post $post)
+    {
+        $this->post = $post;
+        $this->open_edit = true;
+    }
+
+    public function update()
+    {
+        $this->validate();
+
+        if ($this->image) {
+            Storage::delete([$this->post->image]); //Eliminar foto antigua
+
+            $this->post->image = $this->image->store('posts'); //Nueva imagen con nueva URL
+        }
+
+        $this->post->save(); //Actualizar post
+
+        $this->reset(['open_edit', 'image']);
+
+        $this->identificador = rand();
+
+        //$this->emitTo('show-posts', 'render');Ya no es necesario porque esta en la misma vista
+
+        $this->emit('alert', 'Actualización exitosa!!!');
+    }
 
 }
