@@ -30,11 +30,12 @@ class ShowPosts extends Component
 
 
     public $post, $image, $identificador;
-    public $search = '';
-    public $sort      = 'id';
-    public $direction = 'desc';
-    public $cant      = '10'; 
-    public $open_edit = false;
+    public $search      = '';
+    public $sort        = 'id';
+    public $direction   = 'desc';
+    public $cant        = '10'; 
+    public $readyToLoad = false;
+    public $open_edit   = false;
 
     protected $queryString = [//Cantidad de datos que se quiere en la url
         'cant'      => ['except' => '10'],
@@ -64,15 +65,26 @@ class ShowPosts extends Component
 
     public function render()
     {
-
-        $posts = Post::where('title','like','%' . $this->search . '%')
+        if($this->readyToLoad)
+        {
+            $posts = Post::where('title','like','%' . $this->search . '%')
                      ->orWhere('content', 'like' , '%' . $this->search . '%')
                      ->orderBy($this->sort, $this->direction)
                      ->paginate($this->cant);
+        }
+        else
+        { 
+            $posts = [];
+        }
 
         return view('livewire.show-posts', compact('posts'));
         // return view('livewire.show-posts')
         //         ->layout('layouts.base');
+    }
+
+    public function loadPosts()
+    { 
+        $this->readyToLoad = true;
     }
 
     public function order($sort)

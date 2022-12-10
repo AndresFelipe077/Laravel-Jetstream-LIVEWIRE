@@ -1,4 +1,4 @@
-<div>
+<div wire:init="loadPosts">
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -32,7 +32,7 @@
                 @livewire('create-post')
             </div>
 
-            @if ($posts->count())
+            @if (count($posts)){{-- $posts->count() --}}
 
                 <table class="table-auto w-full">
                     <thead class="text-xs font-bold uppercase text-dark-400 bg-orange-50">
@@ -108,9 +108,10 @@
                                 <td class="p-2 whitespace-nowrap">
                                     {{-- @livewire('edit-post', ['post' => $post], key($post->id))Se el conoce como anidamiento --}}
                                     <a href="#" class="text-lg text-center text-base"
-                                        wire:click="edit({{$item}})"><svg class="h-8 w-8 text-red-500" width="24"
-                                            height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        wire:click="edit({{ $item }})"><svg class="h-8 w-8 text-red-500"
+                                            width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                                            stroke="currentColor" fill="none" stroke-linecap="round"
+                                            stroke-linejoin="round">
                                             <path stroke="none" d="M0 0h24v24H0z" />
                                             <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
                                             <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
@@ -121,18 +122,28 @@
                         @endforeach
                     </tbody>
                 </table>
+                @if ($posts->hasPages())
+                    <div class="px-6 py3">
+                        {{ $posts->links() }}
+                    </div>
+                @endif
             @else
-                <div class="px-6 py-4">
-                    No se encontro lo que buscas😥
-                </div>
+                @if ($readyToLoad == false)
+                    <div class="flex justify-center items-center">
+                        <div class="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full"
+                            role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                    </div>
+                @elseif(!count($posts))
+                    <div class="px-6 py-4">
+                        No se encontro lo que buscas😥
+                    </div>
+                @endif
 
             @endif
 
-            @if ($posts->hasPages())
-                <div class="px-6 py3">
-                    {{ $posts->links() }}
-                </div>
-            @endif
+
 
         </x-table>
     </div>
