@@ -103,9 +103,9 @@
                                     <div class="text-left text-base">{{ $item->title }}</div>
                                 </td>
                                 <td class="p-2 whitespace-nowrap">
-                                    <div class="text-left font-bold text-blue-500 text-base">{{ $item->content }}</div>
+                                    <div class="text-left font-bold text-blue-500 text-base">{!! $item->content !!}</div>
                                 </td>
-                                <td class="p-2 whitespace-nowrap">
+                                <td class="p-2 whitespace-nowrap flex">
                                     {{-- @livewire('edit-post', ['post' => $post], key($post->id))Se el conoce como anidamiento --}}
                                     <a href="#" class="text-lg text-center text-base"
                                         wire:click="edit({{ $item }})"><svg class="h-8 w-8 text-red-500"
@@ -117,6 +117,12 @@
                                             <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
                                         </svg>
                                     </a>
+
+                                    <a class="btn btn-red ml-2"
+                                        wire:click="$emit('deletePost', {{ $item->id }})">{{-- Eventos --}}
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+
                                 </td>
                             </tr>
                         @endforeach
@@ -175,7 +181,7 @@
             <div class="flex justify-center items-center h-screen">
                 @if ($image)
                     <img class="mb-4 rounded" src="{{ $image->temporaryUrl() }}" width="50%" height="50%">
-                @else
+                @elseif($post->image)
                     <img src="{{ Storage::url($post->image) }}" alt="">
                 @endif
             </div>
@@ -206,5 +212,35 @@
         </x-slot>
 
     </x-jet-dialog-modal>
+
+    @push('js')
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <script>
+            Livewire.on('deletePost', postId => {
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "No podras revertir la acción!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, eliminarlo!'
+                }).then((result) => {
+
+                    Livewire.emitTo('show-posts', 'delete', postId);
+
+
+                    if (result.isConfirmed) {
+                        Swal.fire(
+                            'Eliminado!',
+                            'Tu archivo ha sido eliminado.',
+                            'success'
+                        )
+                    }
+                })
+            });
+        </script>
+    @endpush
 
 </div>

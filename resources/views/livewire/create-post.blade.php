@@ -57,9 +57,12 @@
                 <x-jet-input-error for="title" />
 
             </div>
-            <div class="mb-4">
+
+            <div class="mb-4">{{-- Nos ayuda a que cuando la pagina se renderice los estilos de CKEditor no se pierdan, lo que quire decir que ignora lo que esta dentro --}}
                 <x-jet-label value="Contenido del post" />
-                <textarea wire:model.defer="content" class="form-control w-full" rows="6"></textarea>
+                <div wire:ignore>
+                    <textarea id="editor" wire:model.defer="content" class="form-control w-full" rows="6">{{$content}}</textarea>              
+                </div>
                 {{-- Normal --}}
                 {{-- @error('content')
                     <h3>{{$message}}</h3>
@@ -91,5 +94,27 @@
 
         </x-slot>
     </x-jet-dialog-modal>
+
+    @push('js')
+        <script src="https://cdn.ckeditor.com/ckeditor5/35.3.2/classic/ckeditor.js"></script>
+
+        <script>
+            ClassicEditor
+                .create(document.querySelector('#editor'))
+                .then(function(editor) {
+                    editor.model.document.on('change:data', () => {
+                        @this.set('content', editor.getData())
+                    })
+
+                    Livewire.on('resetCKEditor',() =>{
+                        editor.setData('');
+                    });
+
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        </script>
+    @endpush
 
 </div>

@@ -37,6 +37,9 @@ class ShowPosts extends Component
     public $readyToLoad = false;
     public $open_edit   = false;
 
+    // protected $listeners = ['render' => 'render']; es lo mismo que abajo solo que cuando ambos se llaman igual
+    protected $listeners = ['render', 'delete'];
+
     protected $queryString = [//Cantidad de datos que se quiere en la url
         'cant'      => ['except' => '10'],
         'sort'      => ['except' => 'id'],
@@ -55,9 +58,7 @@ class ShowPosts extends Component
         'post.content' => 'required',
     ];
 
-    // protected $listeners = ['render' => 'render']; es lo mismo que abajo solo que cuando ambos se llaman igual
-    protected $listeners = ['render'];
-
+    
     public function updatingSearch()//Funcion para qeu cambie entradas al input search es decir para resetear(algo asi)
     { 
         $this->resetPage();//Esto hace que elimine la paginacion y regrese a su estado inicial y asi pueda buscar libremente en todos los datos
@@ -135,5 +136,11 @@ class ShowPosts extends Component
 
         $this->emit('alert', 'Actualización exitosa!!!');
     }
+
+    public function delete(Post $post)
+    {
+        $post->delete();
+    }
+
 
 }

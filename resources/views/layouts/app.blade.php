@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/fontawesome/css/all.min.css') }}">
 
+    @stack('css')
 
 </head>
 
@@ -45,9 +46,10 @@
     </div>
 
     @stack('modals')
-
+    
     @livewireScripts
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/app.js') }}" defer></script>
+    @stack('js')
     {{-- Escuchar evento de Scritp --}}
     <script>
         Livewire.on('alert', function(message) {
@@ -61,6 +63,7 @@
             })
         })
     </script>
+
 </body>
 
 </html>
